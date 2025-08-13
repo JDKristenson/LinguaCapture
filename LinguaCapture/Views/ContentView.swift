@@ -3,6 +3,7 @@ import SwiftData
 
 struct ContentView: View {
     @Query private var flashcards: [FlashcardEntry]
+    @State private var isShowingCamera = false
 
     var body: some View {
         NavigationStack {
@@ -18,6 +19,19 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Vocabulary")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: {
+                        isShowingCamera.toggle()
+                    }) {
+                        Image(systemName: "camera.fill")
+                    }
+                    .accessibilityIdentifier("cameraButton")
+                }
+            }
+            .sheet(isPresented: $isShowingCamera) {
+                CameraView()
+            }
             .overlay {
                 if flashcards.isEmpty {
                     ContentUnavailableView(
